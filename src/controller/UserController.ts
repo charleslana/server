@@ -1,5 +1,5 @@
 import logger from 'utils/logger';
-import { ICreateUser } from 'interface/IUser';
+import { ICheckEmail, ICheckUsername, ICreateUser } from 'interface/IUser';
 import { NextFunction, Request, Response } from 'express';
 import { UserService } from 'service/UserService';
 
@@ -14,6 +14,36 @@ export default class UserController {
       const createUser = request.body;
       const handler = await UserService.createUserWithRole(createUser);
       return handler.toJSON(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public static async checkUsernameExists(
+    request: Request<ICheckUsername>,
+    response: Response,
+    next: NextFunction
+  ) {
+    logger.info(`Check username exists ${request.params.username}`);
+    try {
+      const username = request.params.username;
+      const exists = await UserService.checkUsernameExists(username);
+      response.status(200).json({ exists });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public static async checkEmailExists(
+    request: Request<ICheckEmail>,
+    response: Response,
+    next: NextFunction
+  ) {
+    logger.info(`Check email exists ${request.params.email}`);
+    try {
+      const email = request.params.email;
+      const exists = await UserService.checkEmailExists(email);
+      response.status(200).json({ exists });
     } catch (error) {
       next(error);
     }

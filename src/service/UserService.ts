@@ -27,6 +27,16 @@ export class UserService {
     return new HandlerSuccess('Usuário cadastrado com sucesso.', 201);
   }
 
+  public static async checkUsernameExists(username: string): Promise<boolean> {
+    const user = await UserRepository.findUserByUsername(username);
+    return !!user;
+  }
+
+  public static async checkEmailExists(email: string): Promise<boolean> {
+    const user = await UserRepository.findByEmail(email);
+    return !!user;
+  }
+
   public static async getUserById(id: string): Promise<UserModel> {
     const user = await UserRepository.findById(id);
     if (!user) {

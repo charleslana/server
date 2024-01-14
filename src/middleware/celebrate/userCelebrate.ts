@@ -35,6 +35,8 @@ export const userCreateMiddleware = () => {
           .messages({
             'string.email': 'O campo {{#label}} deve conter um e-mail válido.',
             'any.custom': 'O campo {{#label}} deve conter apenas letras minúsculas.',
+            'string.max':
+              '{{#label}} tamanho do texto deve ser menor ou igual a {{#limit}} caracteres',
           })
           .custom(value => {
             if (value !== value.toLowerCase()) {
@@ -67,6 +69,48 @@ export const userCreateMiddleware = () => {
               UserGenderEnum
             ).join(', ')}`,
           }),
+      },
+    },
+    { abortEarly: false }
+  );
+};
+
+export const userCheckUsernameExistsMiddleware = () => {
+  return celebrate(
+    {
+      [Segments.PARAMS]: {
+        username: Joi.string()
+          .pattern(/^[a-zA-ZÀ-ú0-9]*$/)
+          .trim()
+          .min(3)
+          .max(15)
+          .required()
+          .messages({
+            'string.pattern.base':
+              'o campo {{#label}} com o valor {:[.]} deve conter apenas letras e números',
+            'string.min':
+              'O tamanho do texto de {{#label}} deve ter pelo menos {{#limit}} caracteres',
+            'string.max':
+              '{{#label}} tamanho do texto deve ser menor ou igual a {{#limit}} caracteres',
+            'any.required': 'O campo {{#label}} é obrigatório',
+            'string.empty': 'O campo {{#label}} não pode estar vazio',
+          }),
+      },
+    },
+    { abortEarly: false }
+  );
+};
+
+export const userCheckEmailExistsMiddleware = () => {
+  return celebrate(
+    {
+      [Segments.PARAMS]: {
+        email: Joi.string().email().trim().max(50).required().lowercase().messages({
+          'string.email': 'O campo {{#label}} deve conter um e-mail válido.',
+          'string.lowercase': 'O campo {{#label}} deve conter apenas letras minúsculas.',
+          'string.max':
+            '{{#label}} tamanho do texto deve ser menor ou igual a {{#limit}} caracteres',
+        }),
       },
     },
     { abortEarly: false }

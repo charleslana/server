@@ -7,3 +7,11 @@ export interface ICreateUser {
   fullName: string;
   gender: UserGenderEnum;
 }
+
+export interface ICheckUsername {
+  username: string;
+}
+
+export interface ICheckEmail {
+  email: string;
+}
