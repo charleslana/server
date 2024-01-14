@@ -12,6 +12,7 @@ export default class UserModel extends Model {
   public fullName!: string;
   public gender!: UserGenderEnum;
   public banned!: Date | null;
+  public vip!: Date | null;
   public createdAt!: Date;
   public updatedAt!: Date;
   public readonly roles!: UserRoleModel[];
@@ -55,6 +56,12 @@ UserModel.init(
     },
     banned: {
       type: DataTypes.DATE,
+    },
+    vip: {
+      type: DataTypes.DATE,
+      defaultValue: function () {
+        return new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000);
+      },
     },
     createdAt: {
       type: DataTypes.DATE,

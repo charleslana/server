@@ -33,14 +33,14 @@ export const userCreateMiddleware = () => {
           .max(50)
           .required()
           .messages({
-            'string.email': 'O campo {{#label}} deve conter um e-mail válido.',
-            'any.custom': 'O campo {{#label}} deve conter apenas letras minúsculas.',
+            'string.email': 'O campo {{#label}} deve conter um e-mail válido',
+            'any.custom': 'O campo {{#label}} deve conter apenas letras minúsculas',
             'string.max':
               '{{#label}} tamanho do texto deve ser menor ou igual a {{#limit}} caracteres',
           })
           .custom(value => {
             if (value !== value.toLowerCase()) {
-              throw new CelebrateError('O campo email deve conter apenas letras minúsculas.');
+              throw new CelebrateError('O campo email deve conter apenas letras minúsculas');
             }
             return value;
           }),
@@ -106,8 +106,8 @@ export const userCheckEmailExistsMiddleware = () => {
     {
       [Segments.PARAMS]: {
         email: Joi.string().email().trim().max(50).required().lowercase().messages({
-          'string.email': 'O campo {{#label}} deve conter um e-mail válido.',
-          'string.lowercase': 'O campo {{#label}} deve conter apenas letras minúsculas.',
+          'string.email': 'O campo {{#label}} deve conter um e-mail válido',
+          'string.lowercase': 'O campo {{#label}} deve conter apenas letras minúsculas',
           'string.max':
             '{{#label}} tamanho do texto deve ser menor ou igual a {{#limit}} caracteres',
         }),
