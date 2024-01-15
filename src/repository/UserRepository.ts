@@ -20,7 +20,7 @@ export class UserRepository {
       ],
       where: {
         username: {
-          [Op.iLike]: username,
+          [Op.iLike]: `%${username}%`,
         },
       },
     });
@@ -31,7 +31,7 @@ export class UserRepository {
     const user = await UserModel.findOne({
       where: {
         email: {
-          [Op.iLike]: email,
+          [Op.iLike]: `%${email}%`,
         },
       },
     });

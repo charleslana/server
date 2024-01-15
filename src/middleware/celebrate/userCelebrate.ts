@@ -6,14 +6,14 @@ export const userCreateMiddleware = () => {
     {
       [Segments.BODY]: {
         username: Joi.string()
-          .pattern(/^[a-zA-ZÀ-ú0-9]*$/)
+          .pattern(/^[a-zA-Z0-9]*$/)
           .trim()
           .min(3)
           .max(15)
           .required()
           .messages({
             'string.pattern.base':
-              'o campo {{#label}} com o valor {:[.]} deve conter apenas letras e números',
+              'o campo {{#label}} com o valor {:[.]} deve conter apenas letras sem acentos e números',
             'string.min':
               'O tamanho do texto de {{#label}} deve ter pelo menos {{#limit}} caracteres',
             'string.max':
@@ -31,12 +31,14 @@ export const userCreateMiddleware = () => {
           .email()
           .trim()
           .max(50)
+          .regex(/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i)
           .required()
           .messages({
             'string.email': 'O campo {{#label}} deve conter um e-mail válido',
             'any.custom': 'O campo {{#label}} deve conter apenas letras minúsculas',
             'string.max':
               '{{#label}} tamanho do texto deve ser menor ou igual a {{#limit}} caracteres',
+            'string.pattern.base': 'O campo {{#label}} deve seguir o formato de e-mail esperado',
           })
           .custom(value => {
             if (value !== value.toLowerCase()) {
@@ -80,14 +82,14 @@ export const userCheckUsernameExistsMiddleware = () => {
     {
       [Segments.PARAMS]: {
         username: Joi.string()
-          .pattern(/^[a-zA-ZÀ-ú0-9]*$/)
+          .pattern(/^[a-zA-Z0-9]*$/)
           .trim()
           .min(3)
           .max(15)
           .required()
           .messages({
             'string.pattern.base':
-              'o campo {{#label}} com o valor {:[.]} deve conter apenas letras e números',
+              'o campo {{#label}} com o valor {:[.]} deve conter apenas letras sem acentos e números',
             'string.min':
               'O tamanho do texto de {{#label}} deve ter pelo menos {{#limit}} caracteres',
             'string.max':

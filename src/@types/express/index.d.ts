@@ -6,5 +6,8 @@ declare namespace Express {
       id: string;
       roles: UserRoleModel[];
     };
+    session: {
+      userCharacterId: string | null;
+    };
   }
 }

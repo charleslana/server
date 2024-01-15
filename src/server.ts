@@ -7,6 +7,7 @@ import http from 'http';
 import logger from 'utils/logger';
 import rateLimit from 'express-rate-limit';
 import routes from 'route';
+import session from 'express-session';
 import { configureSockets } from 'websocket';
 import { errors } from 'celebrate';
 import { instrument } from '@socket.io/admin-ui';
@@ -17,6 +18,10 @@ const app = express();
 app.use(express.json());
 
 app.use(cors());
+
+app.use(
+  session({ secret: process.env.SESSION_SECRET as string, resave: true, saveUninitialized: true })
+);
 
 app.use(
   rateLimit({

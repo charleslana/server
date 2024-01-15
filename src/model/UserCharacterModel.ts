@@ -5,13 +5,10 @@ import { DataTypes, HasOneGetAssociationMixin, Model, Sequelize } from 'sequeliz
 
 export default class UserCharacterModel extends Model {
   public id!: string;
-  public experience!: string;
+  public name!: string;
   public level!: number;
-  public upgrade!: number;
-  public minHp!: number;
-  public slot!: number | null;
   public userId!: string;
-  public characterId!: string;
+  public characterId!: number;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly character!: CharacterModel;
@@ -27,7 +24,7 @@ UserCharacterModel.init(
       primaryKey: true,
     },
     name: {
-      type: DataTypes.STRING(10),
+      type: DataTypes.STRING(15),
       allowNull: false,
       unique: true,
     },
