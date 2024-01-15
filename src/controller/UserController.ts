@@ -1,5 +1,5 @@
 import logger from 'utils/logger';
-import { ICheckEmail, ICheckUsername, ICreateUser } from 'interface/IUser';
+import { ICheckEmail, ICheckUsername, ICreateUser, IUserAuth } from 'interface/IUser';
 import { NextFunction, Request, Response } from 'express';
 import { UserService } from 'service/UserService';
 
@@ -58,7 +58,11 @@ export default class UserController {
     }
   }
 
-  public static async get(request: Request, response: Response, next: NextFunction) {
+  public static async get(
+    request: Request<{ id: string }>,
+    response: Response,
+    next: NextFunction
+  ) {
     logger.info(`Get user profile with id ${request.params.id}`);
     try {
       const { id } = request.params;
@@ -77,11 +81,24 @@ export default class UserController {
     }
   }
 
-  public static async auth(request: Request, response: Response, next: NextFunction) {
+  public static async auth(
+    request: Request<Record<string, unknown>, unknown, IUserAuth>,
+    response: Response,
+    next: NextFunction
+  ) {
     logger.info(`Authenticate user ${request.body.username}`);
     try {
       const { username, password } = request.body;
       return response.status(200).json(await UserService.authenticate(username, password));
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public static async getUserVIP(request: Request, response: Response, next: NextFunction) {
+    logger.info(`Get user VIP ${request.user.id}`);
+    try {
+      return response.status(200).json({ vip: await UserService.getUserVIP(request.user.id) });
     } catch (error) {
       next(error);
     }

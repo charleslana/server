@@ -15,6 +15,7 @@
     "migrate:down-all": "npx sequelize-cli db:migrate:undo:all",
     "seed:generate": "sequelize seed:generate --name",
     "migrate:seed": "npx sequelize-cli db:seed:all",
+    "migrate:seed-down": "npx sequelize-cli db:seed:undo:all",
     "migrate-test": "NODE_ENV=test npx sequelize-cli db:migrate",
     "migrate-prod": "NODE_ENV=production dotenv -e .env.prod npx sequelize-cli db:migrate"
   },
@@ -31,6 +32,7 @@
     "express-rate-limit": "^7.1.4",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.3",
+    "sanitize-html": "^2.11.0",
     "sequelize": "^6.35.1",
     "sequelize-cli": "^6.6.2",
     "socket.io": "^4.7.2",
@@ -42,6 +44,7 @@
     "@types/express": "^4.17.20",
     "@types/joi": "^17.2.3",
     "@types/jsonwebtoken": "^9.0.5",
+    "@types/sanitize-html": "^2.9.5",
     "@typescript-eslint/eslint-plugin": "^6.9.1",
     "@typescript-eslint/parser": "^6.9.1",
     "dotenv": "^16.3.1",

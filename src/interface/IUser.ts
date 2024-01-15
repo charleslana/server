@@ -15,3 +15,8 @@ export interface ICheckUsername {
 export interface ICheckEmail {
   email: string;
 }
+
+export interface IUserAuth {
+  username: string;
+  password: string;
+}

@@ -79,6 +79,11 @@ export class UserService {
     };
   }
 
+  public static async getUserVIP(id: string): Promise<Date | null> {
+    const user = await this.getUserById(id);
+    return user.vip;
+  }
+
   private static validateUserLogin(user: UserModel, password: string): void {
     const isPasswordValid = this.decrypt(password, user.password);
     const isUserBanned = user.banned != null && user.banned > new Date();

@@ -35,8 +35,17 @@ userRoute
 
 userRoute
   .route('/profile/:id')
-  .get(uuidParamMiddleware(), authenticateMiddleware, UserController.get);
+  .get(
+    uuidParamMiddleware(),
+    authenticateMiddleware,
+    roleMiddleware([UserRoleEnum.Admin]),
+    UserController.get
+  );
 
-userRoute.route('/').get(userCreateMiddleware(), UserController.getAll);
+userRoute
+  .route('/')
+  .get(authenticateMiddleware, roleMiddleware([UserRoleEnum.Admin]), UserController.getAll);
+
+userRoute.route('/vip').get(authenticateMiddleware, UserController.getUserVIP);
 
 export default userRoute;

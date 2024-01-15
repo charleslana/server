@@ -53,7 +53,7 @@ export class UserRepository {
 
   public static async findByProfileId(id: string): Promise<UserModel | null> {
     const user = await UserModel.findByPk(id, {
-      attributes: { exclude: ['authToken', 'password', 'banned'] },
+      attributes: { exclude: ['authToken', 'password'] },
     });
     return user;
   }
