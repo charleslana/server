@@ -25,6 +25,7 @@ export class UserCharacterService {
     }
     const userCharacterModel = new UserCharacterModel();
     userCharacterModel.name = createUserCharacter.name;
+    userCharacterModel.faction = createUserCharacter.faction;
     userCharacterModel.characterId = createUserCharacter.characterId;
     userCharacterModel.userId = createUserCharacter.userId;
     await UserCharacterRepository.save(userCharacterModel);

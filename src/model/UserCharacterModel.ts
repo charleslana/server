@@ -1,5 +1,6 @@
 import CharacterModel from './CharacterModel';
 import database from 'database';
+import UserCharacterFactionEnum from 'enum/UserCharacterFactionEnum';
 import UserModel from './UserModel';
 import { DataTypes, HasOneGetAssociationMixin, Model, Sequelize } from 'sequelize';
 
@@ -7,6 +8,7 @@ export default class UserCharacterModel extends Model {
   public id!: string;
   public name!: string;
   public level!: number;
+  public faction!: UserCharacterFactionEnum;
   public userId!: string;
   public characterId!: number;
   public readonly createdAt!: Date;
@@ -32,6 +34,10 @@ UserCharacterModel.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 1,
+    },
+    faction: {
+      type: DataTypes.ENUM(...Object.values(UserCharacterFactionEnum)),
+      allowNull: false,
     },
     userId: {
       type: DataTypes.UUID,

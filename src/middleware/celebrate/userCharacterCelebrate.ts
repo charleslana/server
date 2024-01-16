@@ -1,3 +1,4 @@
+import UserCharacterFactionEnum from 'enum/UserCharacterFactionEnum';
 import { celebrate, Joi, Segments } from 'celebrate';
 
 export const userCharacterCreateMiddleware = () => {
@@ -25,6 +26,15 @@ export const userCharacterCreateMiddleware = () => {
               '{{#label}} tamanho do texto deve ser menor ou igual a {{#limit}} caracteres',
             'any.required': 'O campo {{#label}} é obrigatório',
             'string.empty': 'O campo {{#label}} não pode estar vazio',
+          }),
+        faction: Joi.string()
+          .valid(...Object.values(UserCharacterFactionEnum))
+          .required()
+          .messages({
+            'any.required': 'O campo {{#label}} é obrigatório',
+            'any.only': `O campo {{#label}} deve ser um dos valores: ${Object.values(
+              UserCharacterFactionEnum
+            ).join(', ')}`,
           }),
       },
     },

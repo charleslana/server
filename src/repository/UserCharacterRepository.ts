@@ -57,6 +57,10 @@ export class UserCharacterRepository {
       where: {
         userId,
       },
+      order: [
+        ['level', 'DESC'],
+        ['id', 'ASC'],
+      ],
     });
     return userCharacters;
   }
