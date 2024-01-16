@@ -14,7 +14,7 @@ export class UserCharacterRepository {
     const userCharacter = await UserCharacterModel.findOne({
       where: {
         name: {
-          [Op.iLike]: `%${name}%`,
+          [Op.iLike]: name,
         },
       },
     });

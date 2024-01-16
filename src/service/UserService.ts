@@ -73,9 +73,9 @@ export class UserService {
     }
     this.validateUserLogin(user, password);
     const updatedUser = await UserService.updateAuthToken(user);
-    const accessToken = this.generateToken(updatedUser);
+    const token = this.generateToken(updatedUser);
     return {
-      accessToken,
+      token: token,
     };
   }
 
