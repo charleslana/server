@@ -1,5 +1,8 @@
 import CharacterModel from 'model/CharacterModel';
+import UserCharacterClassEnum from 'enum/UserCharacterClassEnum';
+import UserCharacterFactionEnum from 'enum/UserCharacterFactionEnum';
 import UserCharacterModel from 'model/UserCharacterModel';
+import UserModel from 'model/UserModel';
 import { Op } from 'sequelize';
 
 export class UserCharacterRepository {
@@ -27,6 +30,11 @@ export class UserCharacterRepository {
         {
           model: CharacterModel,
           as: 'character',
+        },
+        {
+          model: UserModel,
+          as: 'user',
+          attributes: ['credit', 'vip'],
         },
       ],
     });
@@ -82,5 +90,50 @@ export class UserCharacterRepository {
       },
     });
     return count;
+  }
+
+  public static async getTopRankedByFaction(
+    faction: UserCharacterFactionEnum
+  ): Promise<UserCharacterModel[]> {
+    const topRankedUserCharacters = await UserCharacterModel.findAll({
+      where: {
+        faction: faction,
+      },
+      include: [
+        {
+          model: CharacterModel,
+          as: 'character',
+        },
+      ],
+      order: [
+        ['level', 'DESC'],
+        ['created_at', 'ASC'],
+      ],
+      limit: 3,
+    });
+    return topRankedUserCharacters;
+  }
+
+  public static async getTopRankedByClass(
+    _class: UserCharacterClassEnum
+  ): Promise<UserCharacterModel[]> {
+    const topRankedUserCharacters = await UserCharacterModel.findAll({
+      where: {
+        class: _class,
+      },
+      include: [
+        {
+          model: CharacterModel,
+          as: 'character',
+        },
+      ],
+      order: [
+        ['level', 'DESC'],
+        ['score', 'DESC'],
+        ['created_at', 'ASC'],
+      ],
+      limit: 3,
+    });
+    return topRankedUserCharacters;
   }
 }

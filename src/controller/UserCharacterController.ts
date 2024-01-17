@@ -1,4 +1,6 @@
 import logger from 'utils/logger';
+import UserCharacterClassEnum from 'enum/UserCharacterClassEnum';
+import UserCharacterFactionEnum from 'enum/UserCharacterFactionEnum';
 import { ICreateUserCharacter } from 'interface/IUserCharacter';
 import { NextFunction, Request, Response } from 'express';
 import { UserCharacterService } from 'service/UserCharacterService';
@@ -94,6 +96,41 @@ export default class UserCharacterController {
     try {
       request.session.userCharacterId = null;
       return response.status(200).json();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public static async getTopRankedByFaction(
+    request: Request<
+      Record<string, unknown>,
+      unknown,
+      unknown,
+      { faction: UserCharacterFactionEnum }
+    >,
+    response: Response,
+    next: NextFunction
+  ) {
+    logger.info(`Get top ranked by faction ${request.query.faction}`);
+    try {
+      return response
+        .status(200)
+        .json(await UserCharacterService.getTopRankedByFaction(request.query.faction));
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public static async getTopRankedByClass(
+    request: Request<Record<string, unknown>, unknown, unknown, { class: UserCharacterClassEnum }>,
+    response: Response,
+    next: NextFunction
+  ) {
+    logger.info(`Get top ranked by class ${request.query.class}`);
+    try {
+      return response
+        .status(200)
+        .json(await UserCharacterService.getTopRankedByClass(request.query.class));
     } catch (error) {
       next(error);
     }

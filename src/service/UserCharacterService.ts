@@ -1,6 +1,8 @@
 import HandlerError from 'handler/HandlerError';
 import HandlerSuccess from 'handler/HandlerSuccess';
 import UserCharacterBreedEnum from 'enum/UserCharacterBreedEnum';
+import UserCharacterClassEnum from 'enum/UserCharacterClassEnum';
+import UserCharacterFactionEnum from 'enum/UserCharacterFactionEnum';
 import UserCharacterModel from 'model/UserCharacterModel';
 import { CharacterService } from './CharacterService';
 import { ICreateUserCharacter } from 'interface/IUserCharacter';
@@ -55,8 +57,8 @@ export class UserCharacterService {
   }
 
   public static async getAllByUserId(userId: string): Promise<UserCharacterModel[]> {
-    const users = await UserCharacterRepository.findAll(userId);
-    return users;
+    const userCharacters = await UserCharacterRepository.findAll(userId);
+    return userCharacters;
   }
 
   public static async deleteByIdAndUserId(id: string, userId: string): Promise<HandlerSuccess> {
@@ -71,5 +73,31 @@ export class UserCharacterService {
       throw new HandlerError('Personagem do usuário não encontrado.', 404);
     }
     return userCharacter;
+  }
+
+  public static calculateExperienceMax(level: number): number {
+    return 50 * level;
+  }
+
+  public static calculateHPMax(level: number): number {
+    return 130 + 30 * (level - 1);
+  }
+
+  public static calculateMPMax(level: number): number {
+    return 160 + 30 * (level - 1);
+  }
+
+  public static async getTopRankedByFaction(
+    faction: UserCharacterFactionEnum
+  ): Promise<UserCharacterModel[]> {
+    const userCharacters = await UserCharacterRepository.getTopRankedByFaction(faction);
+    return userCharacters;
+  }
+
+  public static async getTopRankedByClass(
+    _class: UserCharacterClassEnum
+  ): Promise<UserCharacterModel[]> {
+    const userCharacters = await UserCharacterRepository.getTopRankedByClass(_class);
+    return userCharacters;
   }
 }

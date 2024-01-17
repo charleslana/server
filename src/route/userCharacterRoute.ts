@@ -2,8 +2,12 @@ import authenticateMiddleware from 'middleware/authenticateMiddleware';
 import express from 'express';
 import UserCharacterController from 'controller/UserCharacterController';
 import { sessionMiddleware } from 'middleware/sessionMiddleware';
-import { userCharacterCreateMiddleware } from 'middleware/celebrate/userCharacterCelebrate';
 import { uuidParamMiddleware } from 'middleware/celebrate/commonCelebrate';
+import {
+  userCharacterCreateMiddleware,
+  userCharacterTopClassMiddleware,
+  userCharacterTopFactionMiddleware,
+} from 'middleware/celebrate/userCharacterCelebrate';
 
 const userCharacterRoute = express.Router();
 
@@ -30,5 +34,23 @@ userCharacterRoute.route('/select/:id').get(authenticateMiddleware, UserCharacte
 userCharacterRoute
   .route('/logout')
   .get(authenticateMiddleware, sessionMiddleware, UserCharacterController.logout);
+
+userCharacterRoute
+  .route('/top/faction')
+  .get(
+    userCharacterTopFactionMiddleware(),
+    authenticateMiddleware,
+    sessionMiddleware,
+    UserCharacterController.getTopRankedByFaction
+  );
+
+userCharacterRoute
+  .route('/top/class')
+  .get(
+    userCharacterTopClassMiddleware(),
+    authenticateMiddleware,
+    sessionMiddleware,
+    UserCharacterController.getTopRankedByClass
+  );
 
 export default userCharacterRoute;

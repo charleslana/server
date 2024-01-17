@@ -6,6 +6,7 @@ import UserCharacterFactionEnum from 'enum/UserCharacterFactionEnum';
 import UserCharacterSeaEnum from 'enum/UserCharacterSeaEnum';
 import UserModel from './UserModel';
 import { DataTypes, HasOneGetAssociationMixin, Model, Sequelize } from 'sequelize';
+import { UserCharacterService } from 'service/UserCharacterService';
 
 export default class UserCharacterModel extends Model {
   public id!: string;
@@ -15,6 +16,17 @@ export default class UserCharacterModel extends Model {
   public sea!: UserCharacterSeaEnum;
   public breed!: UserCharacterBreedEnum;
   public class!: UserCharacterClassEnum;
+  public avatar!: number;
+  public coin!: number;
+  public experience!: number;
+  public experienceMax!: number;
+  public hp!: number;
+  public hpMax!: number;
+  public mp!: number;
+  public mpMax!: number;
+  public stamina!: number;
+  public staminaMax!: number;
+  public score!: number;
   public userId!: string;
   public characterId!: number;
   public readonly createdAt!: Date;
@@ -57,6 +69,65 @@ UserCharacterModel.init(
       type: DataTypes.ENUM(...Object.values(UserCharacterClassEnum)),
       allowNull: false,
     },
+    avatar: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
+    },
+    coin: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 5500,
+    },
+    experience: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    experienceMax: {
+      type: DataTypes.VIRTUAL(DataTypes.INTEGER, ['experienceMax']),
+      get: function () {
+        return UserCharacterService.calculateExperienceMax(this.get('level'));
+      },
+    },
+    hp: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 130,
+    },
+    hpMax: {
+      type: DataTypes.VIRTUAL(DataTypes.INTEGER, ['hpMax']),
+      get: function () {
+        return UserCharacterService.calculateHPMax(this.get('level'));
+      },
+    },
+    mp: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 160,
+    },
+    mpMax: {
+      type: DataTypes.VIRTUAL(DataTypes.INTEGER, ['mpMax']),
+      get: function () {
+        return UserCharacterService.calculateMPMax(this.get('level'));
+      },
+    },
+    stamina: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 40,
+    },
+    staminaMax: {
+      type: DataTypes.VIRTUAL(DataTypes.INTEGER, ['staminaMax']),
+      get: function () {
+        return 40;
+      },
+    },
+    score: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
     userId: {
       type: DataTypes.UUID,
       allowNull: false,
@@ -90,4 +161,9 @@ UserCharacterModel.init(
 UserCharacterModel.belongsTo(CharacterModel, {
   as: 'character',
   foreignKey: 'characterId',
+});
+
+UserCharacterModel.belongsTo(UserModel, {
+  as: 'user',
+  foreignKey: 'userId',
 });

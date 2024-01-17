@@ -71,3 +71,41 @@ export const userCharacterCreateMiddleware = () => {
     { abortEarly: false }
   );
 };
+
+export const userCharacterTopFactionMiddleware = () => {
+  return celebrate(
+    {
+      [Segments.QUERY]: {
+        faction: Joi.string()
+          .valid(...Object.values(UserCharacterFactionEnum))
+          .required()
+          .messages({
+            'any.required': 'O campo {{#label}} é obrigatório',
+            'any.only': `O campo {{#label}} deve ser um dos valores: ${Object.values(
+              UserCharacterFactionEnum
+            ).join(', ')}`,
+          }),
+      },
+    },
+    { abortEarly: false }
+  );
+};
+
+export const userCharacterTopClassMiddleware = () => {
+  return celebrate(
+    {
+      [Segments.QUERY]: {
+        class: Joi.string()
+          .valid(...Object.values(UserCharacterClassEnum))
+          .required()
+          .messages({
+            'any.required': 'O campo {{#label}} é obrigatório',
+            'any.only': `O campo {{#label}} deve ser um dos valores: ${Object.values(
+              UserCharacterClassEnum
+            ).join(', ')}`,
+          }),
+      },
+    },
+    { abortEarly: false }
+  );
+};
