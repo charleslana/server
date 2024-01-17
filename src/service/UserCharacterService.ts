@@ -17,15 +17,18 @@ export class UserCharacterService {
       throw new HandlerError('Limite de personagens atingido (12) para usuários VIP.', 400);
     }
     const user = await UserService.getUserById(createUserCharacter.userId);
-    if (count >= 6 && user.vip !== null && user.vip <= new Date()) {
-      throw new HandlerError('Limite de personagens atingido (6) para usuários.', 400);
+    if (count >= 6) {
+      if (user.vip === null || (user.vip !== null && user.vip <= new Date())) {
+        throw new HandlerError('Limite de personagens atingido (6) para usuários.', 400);
+      }
     }
     if (
       createUserCharacter.breed === UserCharacterBreedEnum.Triton ||
-      (createUserCharacter.breed === UserCharacterBreedEnum.Cyborg && user.vip === null) ||
-      (user.vip !== null && user.vip <= new Date())
+      createUserCharacter.breed === UserCharacterBreedEnum.Cyborg
     ) {
-      throw new HandlerError('Necessário VIP para utilizar este recurso.', 400);
+      if (user.vip === null || (user.vip !== null && user.vip <= new Date())) {
+        throw new HandlerError('Necessário VIP para utilizar este recurso.', 400);
+      }
     }
     const existName = await UserCharacterRepository.findByName(createUserCharacter.name);
     if (existName) {
