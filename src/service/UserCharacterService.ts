@@ -1,5 +1,6 @@
 import HandlerError from 'handler/HandlerError';
 import HandlerSuccess from 'handler/HandlerSuccess';
+import UserCharacterBreedEnum from 'enum/UserCharacterBreedEnum';
 import UserCharacterModel from 'model/UserCharacterModel';
 import { CharacterService } from './CharacterService';
 import { ICreateUserCharacter } from 'interface/IUserCharacter';
@@ -16,8 +17,15 @@ export class UserCharacterService {
       throw new HandlerError('Limite de personagens atingido (12) para usuários VIP.', 400);
     }
     const user = await UserService.getUserById(createUserCharacter.userId);
-    if (count >= 6 && user.vip != null && user.vip <= new Date()) {
+    if (count >= 6 && user.vip !== null && user.vip <= new Date()) {
       throw new HandlerError('Limite de personagens atingido (6) para usuários.', 400);
+    }
+    if (
+      createUserCharacter.breed === UserCharacterBreedEnum.Triton ||
+      (createUserCharacter.breed === UserCharacterBreedEnum.Cyborg && user.vip === null) ||
+      (user.vip !== null && user.vip <= new Date())
+    ) {
+      throw new HandlerError('Necessário VIP para utilizar este recurso.', 400);
     }
     const existName = await UserCharacterRepository.findByName(createUserCharacter.name);
     if (existName) {
@@ -26,6 +34,9 @@ export class UserCharacterService {
     const userCharacterModel = new UserCharacterModel();
     userCharacterModel.name = createUserCharacter.name;
     userCharacterModel.faction = createUserCharacter.faction;
+    userCharacterModel.sea = createUserCharacter.sea;
+    userCharacterModel.breed = createUserCharacter.breed;
+    userCharacterModel.class = createUserCharacter.class;
     userCharacterModel.characterId = createUserCharacter.characterId;
     userCharacterModel.userId = createUserCharacter.userId;
     await UserCharacterRepository.save(userCharacterModel);

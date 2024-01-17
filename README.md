@@ -30,6 +30,12 @@ npm run migrate:generate user-column-vip
 npm run migrate:up
 ```
 
+## Up migrate specific name
+
+```bash
+npm run migrate-name:up 20240117004750-user-character-column-.js
+```
+
 ## Down migrate
 
 ```bash

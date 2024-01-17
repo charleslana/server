@@ -1,4 +1,7 @@
+import UserCharacterBreedEnum from 'enum/UserCharacterBreedEnum';
+import UserCharacterClassEnum from 'enum/UserCharacterClassEnum';
 import UserCharacterFactionEnum from 'enum/UserCharacterFactionEnum';
+import UserCharacterSeaEnum from 'enum/UserCharacterSeaEnum';
 import { celebrate, Joi, Segments } from 'celebrate';
 
 export const userCharacterCreateMiddleware = () => {
@@ -34,6 +37,33 @@ export const userCharacterCreateMiddleware = () => {
             'any.required': 'O campo {{#label}} é obrigatório',
             'any.only': `O campo {{#label}} deve ser um dos valores: ${Object.values(
               UserCharacterFactionEnum
+            ).join(', ')}`,
+          }),
+        sea: Joi.string()
+          .valid(...Object.values(UserCharacterSeaEnum))
+          .required()
+          .messages({
+            'any.required': 'O campo {{#label}} é obrigatório',
+            'any.only': `O campo {{#label}} deve ser um dos valores: ${Object.values(
+              UserCharacterSeaEnum
+            ).join(', ')}`,
+          }),
+        breed: Joi.string()
+          .valid(...Object.values(UserCharacterBreedEnum))
+          .required()
+          .messages({
+            'any.required': 'O campo {{#label}} é obrigatório',
+            'any.only': `O campo {{#label}} deve ser um dos valores: ${Object.values(
+              UserCharacterBreedEnum
+            ).join(', ')}`,
+          }),
+        class: Joi.string()
+          .valid(...Object.values(UserCharacterClassEnum))
+          .required()
+          .messages({
+            'any.required': 'O campo {{#label}} é obrigatório',
+            'any.only': `O campo {{#label}} deve ser um dos valores: ${Object.values(
+              UserCharacterClassEnum
             ).join(', ')}`,
           }),
       },

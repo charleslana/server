@@ -1,6 +1,9 @@
 import CharacterModel from './CharacterModel';
 import database from 'database';
+import UserCharacterBreedEnum from 'enum/UserCharacterBreedEnum';
+import UserCharacterClassEnum from 'enum/UserCharacterClassEnum';
 import UserCharacterFactionEnum from 'enum/UserCharacterFactionEnum';
+import UserCharacterSeaEnum from 'enum/UserCharacterSeaEnum';
 import UserModel from './UserModel';
 import { DataTypes, HasOneGetAssociationMixin, Model, Sequelize } from 'sequelize';
 
@@ -9,6 +12,9 @@ export default class UserCharacterModel extends Model {
   public name!: string;
   public level!: number;
   public faction!: UserCharacterFactionEnum;
+  public sea!: UserCharacterSeaEnum;
+  public breed!: UserCharacterBreedEnum;
+  public class!: UserCharacterClassEnum;
   public userId!: string;
   public characterId!: number;
   public readonly createdAt!: Date;
@@ -37,6 +43,18 @@ UserCharacterModel.init(
     },
     faction: {
       type: DataTypes.ENUM(...Object.values(UserCharacterFactionEnum)),
+      allowNull: false,
+    },
+    sea: {
+      type: DataTypes.ENUM(...Object.values(UserCharacterSeaEnum)),
+      allowNull: false,
+    },
+    breed: {
+      type: DataTypes.ENUM(...Object.values(UserCharacterBreedEnum)),
+      allowNull: false,
+    },
+    class: {
+      type: DataTypes.ENUM(...Object.values(UserCharacterClassEnum)),
       allowNull: false,
     },
     userId: {
