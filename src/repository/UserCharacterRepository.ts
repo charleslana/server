@@ -59,7 +59,7 @@ export class UserCharacterRepository {
       },
       order: [
         ['level', 'DESC'],
-        ['id', 'ASC'],
+        ['created_at', 'ASC'],
       ],
     });
     return userCharacters;
