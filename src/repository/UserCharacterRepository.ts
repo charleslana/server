@@ -60,7 +60,7 @@ export class UserCharacterRepository {
     return userCharacter;
   }
 
-  public static async findAll(userId: string): Promise<UserCharacterModel[]> {
+  public static async findAllByUserId(userId: string): Promise<UserCharacterModel[]> {
     const userCharacters = await UserCharacterModel.findAll({
       where: {
         userId,
@@ -68,6 +68,19 @@ export class UserCharacterRepository {
       order: [
         ['level', 'DESC'],
         ['created_at', 'ASC'],
+      ],
+    });
+    return userCharacters;
+  }
+
+  public static async findAll(): Promise<UserCharacterModel[]> {
+    const userCharacters = await UserCharacterModel.findAll({
+      include: [
+        {
+          model: UserModel,
+          as: 'user',
+          attributes: ['credit', 'vip'],
+        },
       ],
     });
     return userCharacters;

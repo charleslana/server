@@ -33,6 +33,8 @@ export default class UserCharacterModel extends Model {
   public readonly updatedAt!: Date;
   public readonly character!: CharacterModel;
   public getCharacter!: HasOneGetAssociationMixin<CharacterModel>;
+  public readonly user!: UserModel;
+  public getUser!: HasOneGetAssociationMixin<UserModel>;
 }
 
 UserCharacterModel.init(

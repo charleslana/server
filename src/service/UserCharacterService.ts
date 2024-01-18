@@ -57,7 +57,7 @@ export class UserCharacterService {
   }
 
   public static async getAllByUserId(userId: string): Promise<UserCharacterModel[]> {
-    const userCharacters = await UserCharacterRepository.findAll(userId);
+    const userCharacters = await UserCharacterRepository.findAllByUserId(userId);
     return userCharacters;
   }
 
@@ -99,5 +99,20 @@ export class UserCharacterService {
   ): Promise<UserCharacterModel[]> {
     const userCharacters = await UserCharacterRepository.getTopRankedByClass(_class);
     return userCharacters;
+  }
+
+  public static async increaseStamina(): Promise<void> {
+    const allUserCharacters = await UserCharacterRepository.findAll();
+    for (const userCharacter of allUserCharacters) {
+      if (userCharacter.stamina < userCharacter.staminaMax) {
+        const additionalStamina = UserService.isVip(userCharacter.user) ? 3 : 2;
+        const newStamina = Math.min(
+          userCharacter.stamina + additionalStamina,
+          userCharacter.staminaMax
+        );
+        userCharacter.stamina = newStamina;
+        await UserCharacterRepository.update(userCharacter);
+      }
+    }
   }
 }

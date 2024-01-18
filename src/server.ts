@@ -1,4 +1,5 @@
 import cors from 'cors';
+import CronJobService from 'service/CronjobService';
 import database from 'database';
 import errorMiddleware from 'middleware/errorMiddleware';
 import express, { Request, Response } from 'express';
@@ -63,5 +64,6 @@ configureSockets(io);
 const port = process.env.PORT || 3000;
 server.listen(port, async () => {
   await database.sync();
+  CronJobService.start();
   logger.info(`Server is running on port ${port}`);
 });

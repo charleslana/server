@@ -84,6 +84,10 @@ export class UserService {
     return user.vip;
   }
 
+  public static isVip(user: UserModel): boolean {
+    return user.vip !== null && user.vip > new Date();
+  }
+
   private static validateUserLogin(user: UserModel, password: string): void {
     const isPasswordValid = this.decrypt(password, user.password);
     const isUserBanned = user.banned != null && user.banned > new Date();
