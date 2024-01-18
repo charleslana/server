@@ -1,4 +1,6 @@
 import { celebrate, Joi, Segments } from 'celebrate';
+import { escapeTagsHTML } from './commonCelebrate';
+import { NextFunction, Request, Response } from 'express';
 
 export const newspaperCreateMiddleware = () => {
   return celebrate(
@@ -57,3 +59,17 @@ export const newspaperUpdateMiddleware = () => {
     { abortEarly: false }
   );
 };
+
+export function escapeNewspaperHTMLMiddleware(
+  request: Request,
+  _response: Response,
+  next: NextFunction
+) {
+  if (request.body.title) {
+    request.body.title = escapeTagsHTML(request.body.title);
+  }
+  if (request.body.description) {
+    request.body.description = escapeTagsHTML(request.body.description);
+  }
+  next();
+}

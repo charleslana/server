@@ -5,6 +5,7 @@ import roleMiddleware from 'middleware/roleMiddleware';
 import UserRoleEnum from 'enum/UserRoleEnum';
 import { idParamMiddleware, pageMiddleware } from 'middleware/celebrate/commonCelebrate';
 import {
+  escapeNewspaperHTMLMiddleware,
   newspaperCreateMiddleware,
   newspaperUpdateMiddleware,
 } from 'middleware/celebrate/newspaperCelebrate';
@@ -15,6 +16,7 @@ newspaperRoute
   .route('/')
   .post(
     newspaperCreateMiddleware(),
+    escapeNewspaperHTMLMiddleware,
     authenticateMiddleware,
     roleMiddleware([UserRoleEnum.Admin]),
     NewspaperController.create
@@ -32,6 +34,7 @@ newspaperRoute
   .route('/')
   .put(
     newspaperUpdateMiddleware(),
+    escapeNewspaperHTMLMiddleware,
     authenticateMiddleware,
     roleMiddleware([UserRoleEnum.Admin]),
     NewspaperController.update

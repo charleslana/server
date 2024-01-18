@@ -38,7 +38,7 @@ export default class NewspaperController {
     response: Response,
     next: NextFunction
   ) {
-    logger.info('Get all newspaper paginated');
+    logger.info(`Get all newspaper paginated ${request.query.page}`);
     try {
       return response.status(200).json(
         await NewspaperService.getAllPaginated({
