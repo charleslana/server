@@ -150,13 +150,23 @@ UserCharacterModel.init(
       },
       field: 'character_id',
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      field: 'created_at',
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      field: 'updated_at',
+    },
   },
   {
     sequelize: database,
     tableName: 'tb_user_character',
     freezeTableName: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    timestamps: true,
+    updatedAt: true,
   }
 );
 

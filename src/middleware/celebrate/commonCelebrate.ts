@@ -32,6 +32,22 @@ export const uuidParamMiddleware = () => {
   );
 };
 
+export const pageMiddleware = () => {
+  return celebrate(
+    {
+      [Segments.QUERY]: {
+        page: Joi.number().integer().min(1).required().messages({
+          'number.base': 'O campo {{#label}} deve ser um número',
+          'number.integer': 'O campo {{#label}} deve ser um número inteiro',
+          'number.min': 'O campo {{#label}} deve ser maior ou igual a {{#limit}}',
+          'any.required': 'O campo {{#label}} é obrigatório',
+        }),
+      },
+    },
+    { abortEarly: false }
+  );
+};
+
 export const escapeTagsHTML = (input: string): string => {
   return sanitizeHtml(input, {
     allowedTags: [],
