@@ -4,6 +4,7 @@ import UserCharacterBreedEnum from 'enum/UserCharacterBreedEnum';
 import UserCharacterClassEnum from 'enum/UserCharacterClassEnum';
 import UserCharacterFactionEnum from 'enum/UserCharacterFactionEnum';
 import UserCharacterModel from 'model/UserCharacterModel';
+import UserModel from 'model/UserModel';
 import { CharacterService } from './CharacterService';
 import { ICreateUserCharacter } from 'interface/IUserCharacter';
 import { UserCharacterRepository } from 'repository/UserCharacterRepository';
@@ -85,6 +86,10 @@ export class UserCharacterService {
 
   public static calculateMPMax(level: number): number {
     return 160 + 30 * (level - 1);
+  }
+
+  public static calculateStaminaMax(user: UserModel): number {
+    return UserService.isVip(user) ? 60 : 40;
   }
 
   public static async getTopRankedByFaction(

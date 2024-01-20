@@ -117,12 +117,12 @@ UserCharacterModel.init(
     stamina: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 40,
+      defaultValue: 60,
     },
     staminaMax: {
       type: DataTypes.VIRTUAL(DataTypes.INTEGER, ['staminaMax']),
       get: function () {
-        return 40;
+        return UserCharacterService.calculateStaminaMax(this.get('user'));
       },
     },
     score: {

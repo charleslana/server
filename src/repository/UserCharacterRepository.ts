@@ -69,6 +69,13 @@ export class UserCharacterRepository {
         ['level', 'DESC'],
         ['created_at', 'ASC'],
       ],
+      include: [
+        {
+          model: UserModel,
+          as: 'user',
+          attributes: ['credit', 'vip'],
+        },
+      ],
     });
     return userCharacters;
   }
