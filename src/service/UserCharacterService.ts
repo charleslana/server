@@ -77,7 +77,7 @@ export class UserCharacterService {
   }
 
   public static calculateExperienceMax(level: number): number {
-    return 50 * level;
+    return 5 * level;
   }
 
   public static calculateHPMax(level: number): number {
