@@ -38,7 +38,10 @@ app.use(
     max: 100,
     standardHeaders: true,
     legacyHeaders: false,
-    message: 'Too many requests from this IP, please try again after 1 minute',
+    message: {
+      error: true,
+      message: 'Too many requests from this IP, please try again after 1 minute',
+    },
   })
 );
 
