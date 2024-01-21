@@ -34,11 +34,11 @@ app.use(
 
 app.use(
   rateLimit({
-    windowMs: 5 * 60 * 1000,
+    windowMs: 1 * 60 * 1000,
     max: 100,
     standardHeaders: true,
     legacyHeaders: false,
-    message: 'Too many requests from this IP, please try again after 5 minutes',
+    message: 'Too many requests from this IP, please try again after 1 minute',
   })
 );
 
