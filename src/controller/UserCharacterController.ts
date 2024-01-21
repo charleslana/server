@@ -37,7 +37,7 @@ export default class UserCharacterController {
   }
 
   public static async getUserCharacterMe(request: Request, response: Response, next: NextFunction) {
-    logger.info(`Get user character me ${request.user.id}`);
+    logger.info(`Get user character me ${request.session.userCharacterId}`);
     try {
       if (request.session.userCharacterId) {
         return response
