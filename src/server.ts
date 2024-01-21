@@ -18,7 +18,15 @@ const app = express();
 
 app.use(express.json());
 
-app.use(cors());
+const corsOriginUrls = process.env.CORS_ORIGIN_URLS as string;
+const corsOriginUrlsArray = corsOriginUrls.split(',');
+
+app.use(
+  cors({
+    origin: corsOriginUrlsArray,
+    credentials: true,
+  })
+);
 
 app.use(
   session({ secret: process.env.SESSION_SECRET as string, resave: true, saveUninitialized: true })
@@ -46,8 +54,6 @@ app.use((request: Request, response: Response) => {
 });
 
 const server = http.createServer(app);
-const corsOriginUrls = process.env.CORS_ORIGIN_URLS as string;
-const corsOriginUrlsArray = corsOriginUrls.split(',');
 const io = new Server(server, {
   cors: {
     origin: corsOriginUrlsArray,
