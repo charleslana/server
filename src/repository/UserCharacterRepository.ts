@@ -124,6 +124,11 @@ export class UserCharacterRepository {
           model: CharacterModel,
           as: 'character',
         },
+        {
+          model: UserModel,
+          as: 'user',
+          attributes: ['vip'],
+        },
       ],
       order: [
         ['level', 'DESC'],
@@ -145,6 +150,11 @@ export class UserCharacterRepository {
         {
           model: CharacterModel,
           as: 'character',
+        },
+        {
+          model: UserModel,
+          as: 'user',
+          attributes: ['vip'],
         },
       ],
       order: [
