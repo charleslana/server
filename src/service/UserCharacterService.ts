@@ -110,12 +110,22 @@ export class UserCharacterService {
     const allUserCharacters = await UserCharacterRepository.findAll();
     for (const userCharacter of allUserCharacters) {
       if (userCharacter.stamina < userCharacter.staminaMax) {
-        const additionalStamina = UserService.isVip(userCharacter.user) ? 3 : 2;
+        const additionalStamina = UserService.isVip(userCharacter.user) ? 2 : 1;
         const newStamina = Math.min(
           userCharacter.stamina + additionalStamina,
           userCharacter.staminaMax
         );
         userCharacter.stamina = newStamina;
+        await UserCharacterRepository.update(userCharacter);
+      }
+    }
+  }
+
+  public static async adjustStaminaIfExceedsMax(): Promise<void> {
+    const allUserCharacters = await UserCharacterRepository.findAll();
+    for (const userCharacter of allUserCharacters) {
+      if (userCharacter.stamina > userCharacter.staminaMax) {
+        userCharacter.stamina = userCharacter.staminaMax;
         await UserCharacterRepository.update(userCharacter);
       }
     }
