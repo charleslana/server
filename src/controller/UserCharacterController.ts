@@ -135,4 +135,23 @@ export default class UserCharacterController {
       next(error);
     }
   }
+
+  public static async updateAvatar(
+    request: Request<{ avatar: string }>,
+    response: Response,
+    next: NextFunction
+  ) {
+    logger.info(`Update avatar with avatar ${request.params.avatar}`);
+    try {
+      if (request.session.userCharacterId) {
+        const handler = await UserCharacterService.updateAvatar(
+          +request.params.avatar,
+          request.session.userCharacterId
+        );
+        return handler.toJSON(response);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
 }

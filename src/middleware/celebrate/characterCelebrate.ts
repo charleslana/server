@@ -14,6 +14,12 @@ export const characterCreateMiddleware = () => {
           'any.required': 'O campo {{#label}} é obrigatório',
           'string.empty': 'O campo {{#label}} não pode estar vazio',
         }),
+        avatarMax: Joi.number().integer().min(1).required().messages({
+          'number.base': 'O campo {{#label}} deve ser um número',
+          'number.integer': 'O campo {{#label}} deve ser um número inteiro',
+          'number.min': 'O campo {{#label}} deve ser maior ou igual a {{#limit}}',
+          'any.required': 'O campo {{#label}} é obrigatório',
+        }),
       },
     },
     { abortEarly: false }
@@ -37,6 +43,12 @@ export const characterUpdateMiddleware = () => {
             '{{#label}} tamanho do texto deve ser menor ou igual a {{#limit}} caracteres',
           'any.required': 'O campo {{#label}} é obrigatório',
           'string.empty': 'O campo {{#label}} não pode estar vazio',
+        }),
+        avatarMax: Joi.number().integer().min(1).required().messages({
+          'number.base': 'O campo {{#label}} deve ser um número',
+          'number.integer': 'O campo {{#label}} deve ser um número inteiro',
+          'number.min': 'O campo {{#label}} deve ser maior ou igual a {{#limit}}',
+          'any.required': 'O campo {{#label}} é obrigatório',
         }),
       },
     },

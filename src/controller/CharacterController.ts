@@ -1,17 +1,17 @@
-import ICharacter from 'interface/ICharacter';
 import logger from 'utils/logger';
 import { CharacterService } from 'service/CharacterService';
+import { ICreateCharacter, IUpdateCharacter } from 'interface/ICharacter';
 import { NextFunction, Request, Response } from 'express';
 
 export default class CharacterController {
   public static async create(
-    request: Request<Record<string, unknown>, unknown, { name: string }>,
+    request: Request<Record<string, unknown>, unknown, ICreateCharacter>,
     response: Response,
     next: NextFunction
   ) {
     logger.info(`Create character ${request.body.name}`);
     try {
-      const handler = await CharacterService.create(request.body.name);
+      const handler = await CharacterService.create(request.body);
       return handler.toJSON(response);
     } catch (error) {
       next(error);
@@ -41,7 +41,7 @@ export default class CharacterController {
   }
 
   public static async update(
-    request: Request<Record<string, unknown>, unknown, ICharacter>,
+    request: Request<Record<string, unknown>, unknown, IUpdateCharacter>,
     response: Response,
     next: NextFunction
   ) {

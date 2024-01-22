@@ -4,6 +4,7 @@ import { DataTypes, Model } from 'sequelize';
 export default class CharacterModel extends Model {
   public id!: number;
   public name!: string;
+  public avatarMax!: number;
 }
 
 CharacterModel.init(
@@ -17,6 +18,11 @@ CharacterModel.init(
     name: {
       type: DataTypes.STRING(255),
       allowNull: false,
+    },
+    avatarMax: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      field: 'avatar_max',
     },
   },
   {

@@ -4,6 +4,7 @@ import UserCharacterController from 'controller/UserCharacterController';
 import { sessionMiddleware } from 'middleware/sessionMiddleware';
 import { uuidParamMiddleware } from 'middleware/celebrate/commonCelebrate';
 import {
+  updateUserCharacterAvatarMiddleware,
   userCharacterCreateMiddleware,
   userCharacterTopClassMiddleware,
   userCharacterTopFactionMiddleware,
@@ -51,6 +52,15 @@ userCharacterRoute
     authenticateMiddleware,
     sessionMiddleware,
     UserCharacterController.getTopRankedByClass
+  );
+
+userCharacterRoute
+  .route('/avatar/:avatar')
+  .put(
+    updateUserCharacterAvatarMiddleware(),
+    authenticateMiddleware,
+    sessionMiddleware,
+    UserCharacterController.updateAvatar
   );
 
 export default userCharacterRoute;

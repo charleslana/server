@@ -8,18 +8,23 @@ module.exports = {
       [
         {
           name: 'Hannyabal',
+          avatar_max: 10,
         },
         {
           name: 'Aokiji',
+          avatar_max: 25,
         },
         {
           name: 'Benn Beckman',
+          avatar_max: 10,
         },
         {
           name: 'Zephyr',
+          avatar_max: 9,
         },
         {
           name: 'Charlotte Perospero',
+          avatar_max: 8,
         },
       ],
       {}

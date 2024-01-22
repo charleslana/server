@@ -109,3 +109,19 @@ export const userCharacterTopClassMiddleware = () => {
     { abortEarly: false }
   );
 };
+
+export const updateUserCharacterAvatarMiddleware = () => {
+  return celebrate(
+    {
+      [Segments.PARAMS]: {
+        avatar: Joi.number().integer().min(1).required().messages({
+          'number.base': 'O campo {{#label}} deve ser um número',
+          'number.integer': 'O campo {{#label}} deve ser um número inteiro',
+          'number.min': 'O campo {{#label}} deve ser maior ou igual a {{#limit}}',
+          'any.required': 'O campo {{#label}} é obrigatório',
+        }),
+      },
+    },
+    { abortEarly: false }
+  );
+};

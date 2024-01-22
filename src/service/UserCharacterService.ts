@@ -130,4 +130,20 @@ export class UserCharacterService {
       }
     }
   }
+
+  public static async updateAvatar(
+    avatar: number,
+    userCharacterId: string
+  ): Promise<HandlerSuccess> {
+    const userCharacter = await this.get(userCharacterId);
+    if (avatar > userCharacter.character.avatarMax) {
+      throw new HandlerError('O avatar não existe.', 400);
+    }
+    if (!UserService.isVip(userCharacter.user) && avatar > 3) {
+      throw new HandlerError('Necessário VIP para utilizar este recurso.', 400);
+    }
+    userCharacter.avatar = avatar;
+    await UserCharacterRepository.update(userCharacter);
+    return new HandlerSuccess('Avatar do personagem atualizado com sucesso.');
+  }
 }
