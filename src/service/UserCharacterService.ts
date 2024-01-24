@@ -6,7 +6,7 @@ import UserCharacterFactionEnum from 'enum/UserCharacterFactionEnum';
 import UserCharacterModel from 'model/UserCharacterModel';
 import UserModel from 'model/UserModel';
 import { CharacterService } from './CharacterService';
-import { ICreateUserCharacter } from 'interface/IUserCharacter';
+import { ICreateUserCharacter, IUpdateUserCharacterAttribute } from 'interface/IUserCharacter';
 import { UserCharacterRepository } from 'repository/UserCharacterRepository';
 import { UserService } from './UserService';
 
@@ -149,5 +149,25 @@ export class UserCharacterService {
 
   public static calculateAttributePointAvailable(level: number, attributePoint: number): number {
     return 2 * level - attributePoint;
+  }
+
+  public static async updateAttribute(
+    attribute: IUpdateUserCharacterAttribute
+  ): Promise<UserCharacterModel> {
+    const userCharacter = await this.get(attribute.userCharacterId);
+    const totalToDeduct =
+      (attribute.strength ?? 0) +
+      (attribute.dexterity ?? 0) +
+      (attribute.intelligence ?? 0) +
+      (attribute.resistance ?? 0);
+    if (totalToDeduct > userCharacter.attributePointAvailable) {
+      throw new HandlerError('Pontos de atributo insuficiente.', 400);
+    }
+    userCharacter.strength += attribute.strength ?? 0;
+    userCharacter.dexterity += attribute.dexterity ?? 0;
+    userCharacter.intelligence += attribute.intelligence ?? 0;
+    userCharacter.resistance += attribute.resistance ?? 0;
+    userCharacter.attributePoint += totalToDeduct;
+    return await UserCharacterRepository.update(userCharacter);
   }
 }

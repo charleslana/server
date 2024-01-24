@@ -10,6 +10,7 @@
     "resave",
     "unaccent",
     "uuidv",
-    "UUIDV"
+    "UUIDV",
+    "valids"
   ]
 }

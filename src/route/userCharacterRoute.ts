@@ -4,6 +4,7 @@ import UserCharacterController from 'controller/UserCharacterController';
 import { sessionMiddleware } from 'middleware/sessionMiddleware';
 import { uuidParamMiddleware } from 'middleware/celebrate/commonCelebrate';
 import {
+  updateUserCharacterAttributeMiddleware,
   updateUserCharacterAvatarMiddleware,
   userCharacterCreateMiddleware,
   userCharacterTopClassMiddleware,
@@ -61,6 +62,15 @@ userCharacterRoute
     authenticateMiddleware,
     sessionMiddleware,
     UserCharacterController.updateAvatar
+  );
+
+userCharacterRoute
+  .route('/attribute')
+  .put(
+    updateUserCharacterAttributeMiddleware(),
+    authenticateMiddleware,
+    sessionMiddleware,
+    UserCharacterController.updateAttribute
   );
 
 export default userCharacterRoute;

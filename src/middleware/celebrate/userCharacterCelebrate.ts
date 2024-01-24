@@ -100,9 +100,7 @@ export const userCharacterTopClassMiddleware = () => {
           .required()
           .messages({
             'any.required': 'O campo {{#label}} é obrigatório',
-            'any.only': `O campo {{#label}} deve ser um dos valores: ${Object.values(
-              UserCharacterClassEnum
-            ).join(', ')}`,
+            'any.only': 'O valor do campo {{#label}} deve ser um dos valores válidos: {{#valids}}',
           }),
       },
     },
@@ -123,5 +121,32 @@ export const updateUserCharacterAvatarMiddleware = () => {
       },
     },
     { abortEarly: false }
+  );
+};
+
+export const updateUserCharacterAttributeMiddleware = () => {
+  return celebrate(
+    {
+      [Segments.BODY]: Joi.object({
+        strength: Joi.number().integer().min(1).max(999),
+        dexterity: Joi.number().integer().min(1).max(999),
+        intelligence: Joi.number().integer().min(1).max(999),
+        resistance: Joi.number().integer().min(1).max(999),
+      })
+        .or('strength', 'dexterity', 'intelligence', 'resistance')
+        .messages({
+          'object.missing':
+            'Pelo menos um dos campos (strength, dexterity, intelligence, resistance) deve ser fornecido',
+        }),
+    },
+    {
+      abortEarly: false,
+      messages: {
+        'number.base': 'O campo {{#label}} deve ser um número',
+        'number.integer': 'O campo {{#label}} deve ser um número inteiro',
+        'number.min': 'O campo {{#label}} deve ser maior ou igual a {{#limit}}',
+        'number.max': 'O campo {{#label}} não pode ser maior que {{#limit}}',
+      },
+    }
   );
 };

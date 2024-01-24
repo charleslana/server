@@ -1,7 +1,7 @@
 import logger from 'utils/logger';
 import UserCharacterClassEnum from 'enum/UserCharacterClassEnum';
 import UserCharacterFactionEnum from 'enum/UserCharacterFactionEnum';
-import { ICreateUserCharacter } from 'interface/IUserCharacter';
+import { ICreateUserCharacter, IUpdateUserCharacterAttribute } from 'interface/IUserCharacter';
 import { NextFunction, Request, Response } from 'express';
 import { UserCharacterService } from 'service/UserCharacterService';
 
@@ -149,6 +149,26 @@ export default class UserCharacterController {
           request.session.userCharacterId
         );
         return handler.toJSON(response);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public static async updateAttribute(
+    request: Request<Record<string, unknown>, unknown, IUpdateUserCharacterAttribute>,
+    response: Response,
+    next: NextFunction
+  ) {
+    logger.info(`Update attribute with user character id ${request.session.userCharacterId}`);
+    try {
+      if (request.session.userCharacterId) {
+        const updateUserCharacterAttribute = request.body;
+        updateUserCharacterAttribute.userCharacterId = request.session.userCharacterId;
+        const userCharacterAttributeUpdated = await UserCharacterService.updateAttribute(
+          updateUserCharacterAttribute
+        );
+        return response.status(200).json(userCharacterAttributeUpdated);
       }
     } catch (error) {
       next(error);

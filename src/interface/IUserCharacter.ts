@@ -12,3 +12,11 @@ export interface ICreateUserCharacter {
   breed: UserCharacterBreedEnum;
   class: UserCharacterClassEnum;
 }
+
+export interface IUpdateUserCharacterAttribute {
+  strength?: number;
+  dexterity?: number;
+  intelligence?: number;
+  resistance?: number;
+  userCharacterId: string;
+}
