@@ -27,6 +27,12 @@ export default class UserCharacterModel extends Model {
   public stamina!: number;
   public staminaMax!: number;
   public score!: number;
+  public strength!: number;
+  public dexterity!: number;
+  public intelligence!: number;
+  public resistance!: number;
+  public attributePoint!: number;
+  public attributePointAvailable!: number;
   public userId!: string;
   public characterId!: number;
   public readonly createdAt!: Date;
@@ -129,6 +135,41 @@ UserCharacterModel.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
+    },
+    strength: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
+    },
+    dexterity: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
+    },
+    intelligence: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
+    },
+    resistance: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
+    },
+    attributePoint: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+      field: 'attribute_point',
+    },
+    attributePointAvailable: {
+      type: DataTypes.VIRTUAL(DataTypes.INTEGER, ['attributePointAvailable']),
+      get: function () {
+        return UserCharacterService.calculateAttributePointAvailable(
+          this.get('level'),
+          this.get('attributePoint')
+        );
+      },
     },
     userId: {
       type: DataTypes.UUID,

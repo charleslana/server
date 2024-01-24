@@ -146,4 +146,8 @@ export class UserCharacterService {
     await UserCharacterRepository.update(userCharacter);
     return new HandlerSuccess('Avatar do personagem atualizado com sucesso.');
   }
+
+  public static calculateAttributePointAvailable(level: number, attributePoint: number): number {
+    return 2 * level - attributePoint;
+  }
 }
