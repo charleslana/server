@@ -11,9 +11,9 @@ const database = new Sequelize(
     dialectOptions: {
       timezone: 'America/Sao_Paulo',
     },
-    logging: Boolean(process.env.DATABASE_LOG),
+    logging: process.env.DATABASE_LOG === 'true',
     sync: {
-      alter: true,
+      alter: process.env.DATABASE_SYNC_ALTER === 'true',
     },
     hooks: {
       beforeSync: async options => {

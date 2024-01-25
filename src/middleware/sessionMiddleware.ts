@@ -5,7 +5,7 @@ export const sessionMiddleware = (request: Request, response: Response, next: Ne
   if (!session || !session.userCharacterId) {
     return response
       .status(422)
-      .json({ error: true, message: 'User character ID is missing in the session' });
+      .json({ error: true, message: 'Sessão do personagem expirada ou faltando' });
   }
   next();
 };

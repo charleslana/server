@@ -4,6 +4,7 @@ import UserCharacterBreedEnum from 'enum/UserCharacterBreedEnum';
 import UserCharacterClassEnum from 'enum/UserCharacterClassEnum';
 import UserCharacterFactionEnum from 'enum/UserCharacterFactionEnum';
 import UserCharacterSeaEnum from 'enum/UserCharacterSeaEnum';
+import UserCharacterTrainingModel from './UserCharacterTrainingModel';
 import UserModel from './UserModel';
 import { DataTypes, HasOneGetAssociationMixin, Model, Sequelize } from 'sequelize';
 import { UserCharacterService } from 'service/UserCharacterService';
@@ -42,6 +43,8 @@ export default class UserCharacterModel extends Model {
   public getCharacter!: HasOneGetAssociationMixin<CharacterModel>;
   public readonly user!: UserModel;
   public getUser!: HasOneGetAssociationMixin<UserModel>;
+  public readonly training!: UserCharacterTrainingModel;
+  public getTraining!: HasOneGetAssociationMixin<UserCharacterTrainingModel>;
 }
 
 UserCharacterModel.init(
@@ -227,4 +230,9 @@ UserCharacterModel.belongsTo(CharacterModel, {
 UserCharacterModel.belongsTo(UserModel, {
   as: 'user',
   foreignKey: 'userId',
+});
+
+UserCharacterModel.hasOne(UserCharacterTrainingModel, {
+  as: 'training',
+  foreignKey: 'userCharacterId',
 });

@@ -1,3 +1,4 @@
+import database from 'database';
 import HandlerError from 'handler/HandlerError';
 import HandlerSuccess from 'handler/HandlerSuccess';
 import UserCharacterBreedEnum from 'enum/UserCharacterBreedEnum';
@@ -8,46 +9,30 @@ import UserModel from 'model/UserModel';
 import { CharacterService } from './CharacterService';
 import { ICreateUserCharacter, IUpdateUserCharacterAttribute } from 'interface/IUserCharacter';
 import { omitFields } from 'utils/utils';
+import { Transaction } from 'sequelize';
 import { UserCharacterRepository } from 'repository/UserCharacterRepository';
+import { UserCharacterTrainingService } from './UserCharacterTrainingService';
 import { UserService } from './UserService';
 
 export class UserCharacterService {
   private constructor() {}
 
   public static async create(createUserCharacter: ICreateUserCharacter): Promise<HandlerSuccess> {
-    await CharacterService.get(createUserCharacter.characterId);
-    const count = await UserCharacterRepository.countUserCharacters(createUserCharacter.userId);
-    if (count >= 12) {
-      throw new HandlerError('Limite de personagens atingido (12) para usuários VIP.', 400);
+    await this.validateCharacterCreation(createUserCharacter);
+    const userCharacterModel = this.fillUserCharacterData(createUserCharacter);
+    const transaction = await database.transaction();
+    try {
+      const userCharacterCreated = await UserCharacterRepository.save(
+        userCharacterModel,
+        transaction
+      );
+      await UserCharacterTrainingService.create(userCharacterCreated.id, transaction);
+      await transaction.commit();
+      return new HandlerSuccess('Personagem do usuário cadastrado com sucesso.', 201);
+    } catch (error) {
+      await transaction.rollback();
+      throw new HandlerError(`Erro ao criar o personagem do usuário: ${error}`, 500);
     }
-    const user = await UserService.getUserById(createUserCharacter.userId);
-    if (count >= 6) {
-      if (user.vip === null || (user.vip !== null && user.vip <= new Date())) {
-        throw new HandlerError('Limite de personagens atingido (6) para usuários.', 400);
-      }
-    }
-    if (
-      createUserCharacter.breed === UserCharacterBreedEnum.Triton ||
-      createUserCharacter.breed === UserCharacterBreedEnum.Cyborg
-    ) {
-      if (user.vip === null || (user.vip !== null && user.vip <= new Date())) {
-        throw new HandlerError('Necessário VIP para utilizar este recurso.', 400);
-      }
-    }
-    const existName = await UserCharacterRepository.findByName(createUserCharacter.name);
-    if (existName) {
-      throw new HandlerError('Já existe um nome cadastrado para o personagem.', 400);
-    }
-    const userCharacterModel = new UserCharacterModel();
-    userCharacterModel.name = createUserCharacter.name;
-    userCharacterModel.faction = createUserCharacter.faction;
-    userCharacterModel.sea = createUserCharacter.sea;
-    userCharacterModel.breed = createUserCharacter.breed;
-    userCharacterModel.class = createUserCharacter.class;
-    userCharacterModel.characterId = createUserCharacter.characterId;
-    userCharacterModel.userId = createUserCharacter.userId;
-    await UserCharacterRepository.save(userCharacterModel);
-    return new HandlerSuccess('Personagem do usuário cadastrado com sucesso.', 201);
   }
 
   public static async get(id: string): Promise<UserCharacterModel> {
@@ -138,6 +123,13 @@ export class UserCharacterService {
     }
   }
 
+  public static async update(
+    userCharacter: UserCharacterModel,
+    transaction?: Transaction
+  ): Promise<void> {
+    await UserCharacterRepository.update(userCharacter, transaction);
+  }
+
   public static async updateAvatar(
     avatar: number,
     userCharacterId: string
@@ -146,7 +138,7 @@ export class UserCharacterService {
     if (avatar > userCharacter.character.avatarMax) {
       throw new HandlerError('O avatar não existe.', 400);
     }
-    if (!UserService.isVip(userCharacter.user) && avatar > 3) {
+    if (!UserService.isVip(userCharacter.user) && avatar > 2) {
       throw new HandlerError('Necessário VIP para utilizar este recurso.', 400);
     }
     userCharacter.avatar = avatar;
@@ -180,5 +172,65 @@ export class UserCharacterService {
     userCharacter.resistance += attribute.resistance ?? 0;
     userCharacter.attributePointUsed += totalToDeduct;
     return await UserCharacterRepository.update(userCharacter);
+  }
+
+  private static async validateCharacterCreation(
+    createUserCharacter: ICreateUserCharacter
+  ): Promise<void> {
+    await CharacterService.get(createUserCharacter.characterId);
+    const user = await this.checkCharacterLimits(createUserCharacter);
+    await this.checkCharacterBreed(createUserCharacter, user);
+    await this.checkDuplicateName(createUserCharacter.name);
+  }
+
+  private static async checkCharacterLimits(
+    createUserCharacter: ICreateUserCharacter
+  ): Promise<UserModel> {
+    const count = await UserCharacterRepository.countUserCharacters(createUserCharacter.userId);
+    if (count >= 12) {
+      throw new HandlerError('Limite de personagens atingido (12) para usuários VIP.', 400);
+    }
+    const user = await UserService.getUserById(createUserCharacter.userId);
+    if (count >= 6) {
+      if (user.vip === null || (user.vip !== null && user.vip <= new Date())) {
+        throw new HandlerError('Limite de personagens atingido (6) para usuários.', 400);
+      }
+    }
+    return user;
+  }
+
+  private static async checkCharacterBreed(
+    createUserCharacter: ICreateUserCharacter,
+    user: UserModel
+  ): Promise<void> {
+    if (
+      createUserCharacter.breed === UserCharacterBreedEnum.Triton ||
+      createUserCharacter.breed === UserCharacterBreedEnum.Cyborg
+    ) {
+      if (user.vip === null || (user.vip !== null && user.vip <= new Date())) {
+        throw new HandlerError('Necessário VIP para utilizar este recurso.', 400);
+      }
+    }
+  }
+
+  private static async checkDuplicateName(name: string): Promise<void> {
+    const existName = await UserCharacterRepository.findByName(name);
+    if (existName) {
+      throw new HandlerError('Já existe um nome cadastrado para o personagem.', 400);
+    }
+  }
+
+  private static fillUserCharacterData(
+    createUserCharacter: ICreateUserCharacter
+  ): UserCharacterModel {
+    const userCharacterModel = new UserCharacterModel();
+    userCharacterModel.name = createUserCharacter.name;
+    userCharacterModel.faction = createUserCharacter.faction;
+    userCharacterModel.sea = createUserCharacter.sea;
+    userCharacterModel.breed = createUserCharacter.breed;
+    userCharacterModel.class = createUserCharacter.class;
+    userCharacterModel.characterId = createUserCharacter.characterId;
+    userCharacterModel.userId = createUserCharacter.userId;
+    return userCharacterModel;
   }
 }

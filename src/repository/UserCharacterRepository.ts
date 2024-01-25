@@ -2,14 +2,18 @@ import CharacterModel from 'model/CharacterModel';
 import UserCharacterClassEnum from 'enum/UserCharacterClassEnum';
 import UserCharacterFactionEnum from 'enum/UserCharacterFactionEnum';
 import UserCharacterModel from 'model/UserCharacterModel';
+import UserCharacterTrainingModel from 'model/UserCharacterTrainingModel';
 import UserModel from 'model/UserModel';
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 
 export class UserCharacterRepository {
   private constructor() {}
 
-  public static async save(userCharacter: UserCharacterModel): Promise<UserCharacterModel> {
-    const savedUserCharacter = await userCharacter.save();
+  public static async save(
+    userCharacter: UserCharacterModel,
+    transaction: Transaction
+  ): Promise<UserCharacterModel> {
+    const savedUserCharacter = await userCharacter.save({ transaction });
     return savedUserCharacter;
   }
 
@@ -35,6 +39,10 @@ export class UserCharacterRepository {
           model: UserModel,
           as: 'user',
           attributes: ['credit', 'vip'],
+        },
+        {
+          model: UserCharacterTrainingModel,
+          as: 'training',
         },
       ],
     });
@@ -93,8 +101,11 @@ export class UserCharacterRepository {
     return userCharacters;
   }
 
-  public static async update(userCharacter: UserCharacterModel): Promise<UserCharacterModel> {
-    const updatedUserCharacter = await userCharacter.save();
+  public static async update(
+    userCharacter: UserCharacterModel,
+    transaction?: Transaction
+  ): Promise<UserCharacterModel> {
+    const updatedUserCharacter = await userCharacter.save({ transaction });
     return updatedUserCharacter;
   }
 
