@@ -12,6 +12,9 @@ const database = new Sequelize(
       timezone: 'America/Sao_Paulo',
     },
     logging: Boolean(process.env.DATABASE_LOG),
+    sync: {
+      alter: true,
+    },
     hooks: {
       beforeSync: async options => {
         await database.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";', options);

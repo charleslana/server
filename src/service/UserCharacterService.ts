@@ -7,6 +7,7 @@ import UserCharacterModel from 'model/UserCharacterModel';
 import UserModel from 'model/UserModel';
 import { CharacterService } from './CharacterService';
 import { ICreateUserCharacter, IUpdateUserCharacterAttribute } from 'interface/IUserCharacter';
+import { omitFields } from 'utils/utils';
 import { UserCharacterRepository } from 'repository/UserCharacterRepository';
 import { UserService } from './UserService';
 
@@ -94,16 +95,22 @@ export class UserCharacterService {
 
   public static async getTopRankedByFaction(
     faction: UserCharacterFactionEnum
-  ): Promise<UserCharacterModel[]> {
+  ): Promise<Omit<UserCharacterModel, 'user' | 'userId'>[]> {
     const userCharacters = await UserCharacterRepository.getTopRankedByFaction(faction);
-    return userCharacters;
+    const usersWithoutVip = userCharacters.map(userCharacter =>
+      omitFields(userCharacter.toJSON(), ['user', 'userId'])
+    );
+    return usersWithoutVip;
   }
 
   public static async getTopRankedByClass(
     _class: UserCharacterClassEnum
-  ): Promise<UserCharacterModel[]> {
+  ): Promise<Omit<UserCharacterModel, 'user' | 'userId'>[]> {
     const userCharacters = await UserCharacterRepository.getTopRankedByClass(_class);
-    return userCharacters;
+    const usersWithoutVip = userCharacters.map(userCharacter =>
+      omitFields(userCharacter.toJSON(), ['user', 'userId'])
+    );
+    return usersWithoutVip;
   }
 
   public static async increaseStamina(): Promise<void> {
@@ -147,8 +154,12 @@ export class UserCharacterService {
     return new HandlerSuccess('Avatar do personagem atualizado com sucesso.');
   }
 
-  public static calculateAttributePointAvailable(level: number, attributePoint: number): number {
-    return 2 * level - attributePoint;
+  public static calculateAttributePointAvailable(
+    level: number,
+    attributePoint: number,
+    attributePointUsed: number
+  ): number {
+    return 2 * level - attributePointUsed + attributePoint;
   }
 
   public static async updateAttribute(

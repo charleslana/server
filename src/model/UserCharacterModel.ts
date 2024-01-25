@@ -32,6 +32,7 @@ export default class UserCharacterModel extends Model {
   public intelligence!: number;
   public resistance!: number;
   public attributePoint!: number;
+  public attributePointUsed!: number;
   public attributePointAvailable!: number;
   public userId!: string;
   public characterId!: number;
@@ -162,12 +163,19 @@ UserCharacterModel.init(
       defaultValue: 0,
       field: 'attribute_point',
     },
+    attributePointUsed: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+      field: 'attribute_point_used',
+    },
     attributePointAvailable: {
       type: DataTypes.VIRTUAL(DataTypes.INTEGER, ['attributePointAvailable']),
       get: function () {
         return UserCharacterService.calculateAttributePointAvailable(
           this.get('level'),
-          this.get('attributePoint')
+          this.get('attributePoint'),
+          this.get('attributePointUsed')
         );
       },
     },
