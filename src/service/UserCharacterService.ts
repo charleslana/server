@@ -97,20 +97,20 @@ export class UserCharacterService {
     faction: UserCharacterFactionEnum
   ): Promise<Omit<UserCharacterModel, 'user' | 'userId'>[]> {
     const userCharacters = await UserCharacterRepository.getTopRankedByFaction(faction);
-    const usersWithoutVip = userCharacters.map(userCharacter =>
+    const userCharactersWithoutUser = userCharacters.map(userCharacter =>
       omitFields(userCharacter.toJSON(), ['user', 'userId'])
     );
-    return usersWithoutVip;
+    return userCharactersWithoutUser;
   }
 
   public static async getTopRankedByClass(
     _class: UserCharacterClassEnum
   ): Promise<Omit<UserCharacterModel, 'user' | 'userId'>[]> {
     const userCharacters = await UserCharacterRepository.getTopRankedByClass(_class);
-    const usersWithoutVip = userCharacters.map(userCharacter =>
+    const userCharactersWithoutUser = userCharacters.map(userCharacter =>
       omitFields(userCharacter.toJSON(), ['user', 'userId'])
     );
-    return usersWithoutVip;
+    return userCharactersWithoutUser;
   }
 
   public static async increaseStamina(): Promise<void> {
