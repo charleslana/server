@@ -178,7 +178,7 @@ export class UserCharacterService {
     userCharacter.dexterity += attribute.dexterity ?? 0;
     userCharacter.intelligence += attribute.intelligence ?? 0;
     userCharacter.resistance += attribute.resistance ?? 0;
-    userCharacter.attributePoint += totalToDeduct;
+    userCharacter.attributePointUsed += totalToDeduct;
     return await UserCharacterRepository.update(userCharacter);
   }
 }
